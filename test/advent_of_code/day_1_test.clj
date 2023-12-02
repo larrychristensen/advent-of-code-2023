@@ -1,10 +1,10 @@
 (ns advent-of-code.day-1-test
-  (:require [clojure.test :refer :all]
-            [advent-of-code.core :refer :all]))
+  (:require
+   [clojure.test :refer :all]
+   [advent-of-code.day-1 :refer :all]))
 
 (deftest test-example
-  (testing "That it produces the correct value"
-    (is (= 142 (sum-of-calibration-values "example-input-1.txt")))))
+  (is (= 142 (sum-of-calibration-values "example-input-1.txt"))))
 
 (deftest test-digits-in-word
   (is (= ["1" "3" "4"] (digits-in-word "a1w34b"))))
@@ -20,8 +20,7 @@
   (is (= "23" (concat-strs ["2" "3"]))))
 
 (deftest test-sum-of-calibration-values-part-2
-  (testing "That it produces the correct value"
-    (is (= 281 (sum-of-calibration-values-part-2 "example-input-1-2.txt")))))
+  (is (= 281 (sum-of-calibration-values-part-2 "example-input-1-2.txt"))))
 
 (deftest test-digits-in-word-2
   (is (= ["1"  "3" "3" "4" "4"] (digits-in-word-2 "aonex33uixfour4b")))
