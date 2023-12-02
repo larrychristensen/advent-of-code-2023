@@ -1,4 +1,4 @@
-(ns advent-of-code.core-test
+(ns advent-of-code.day-1-test
   (:require [clojure.test :refer :all]
             [advent-of-code.core :refer :all]))
 

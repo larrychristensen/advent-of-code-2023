@@ -1,4 +1,4 @@
-(ns advent-of-code.core
+(ns advent-of-code.day-1
   (:require
    [clojure.java.io :as io]
    [clojure.string :as s]))
