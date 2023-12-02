@@ -27,9 +27,6 @@
 
 (def regex (re-pattern regex-str))
 
-(defn first-digit [v]
-  (first (re-find regex v)))
-
 (defn digits-in-word-2 [word]
   (sequence
    (comp
