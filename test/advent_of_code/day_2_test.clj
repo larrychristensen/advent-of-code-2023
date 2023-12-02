@@ -3,6 +3,21 @@
    [clojure.test :refer :all]
    [advent-of-code.day-2 :refer :all]))
 
+(def example-trials
+  [{"blue" 3
+    "red" 4}
+   {"red" 1
+    "green" 2
+    "blue" 6}
+   {"green" 2}])
+
+(def example-game
+  {:id 1
+   :trials example-trials})
+
+(def example-game-trials-str
+  "3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green")
+
 (deftest test-possible-game-id-sum
   (is (= 8
          (sum-of-the-ids-of-possible-games
@@ -13,15 +28,8 @@
 
 (deftest test-parse-game-record
   (is (=
-       {:id 1
-        :trials
-        [{"blue" 3
-          "red" 4}
-         {"red" 1
-          "green" 2
-          "blue" 6}
-         {"green" 2}]}
-       (parse-game-record "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"))))
+       example-game
+       (parse-game-record (format "Game 1: %s" example-game-trials-str)))))
 
 (deftest test-parse-trial-count
   (is (= ["blue" 2] (parse-trial-count "2 blue"))))
@@ -32,10 +40,8 @@
 
 (deftest test-parse-trial-records
   (is (=
-       [{"blue" 3 "red" 4}
-         {"red" 1 "green" 2 "blue" 6}
-        {"green" 2}]
-       (parse-trial-records "3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"))))
+       example-trials
+       (parse-trial-records example-game-trials-str))))
 
 (deftest test-sum-of-the-powers-of-minimum-sets
   (is (=
@@ -45,15 +51,7 @@
 (deftest test-game-minimum-set
   (is (=
        {"blue" 6 "red" 4 "green" 2}
-       (game-minimum-set
-        {:id 1
-         :trials
-         [{"blue" 3
-           "red" 4}
-          {"red" 1
-           "green" 2
-           "blue" 6}
-          {"green" 2}]}))))
+       (game-minimum-set example-game))))
 
 (deftest test-power-of-minimum-set
   (is
