@@ -5,8 +5,8 @@
 
 (deftest test-parse-schematic
   (let [schematic ["12.."
-                                    "...$"
-                                    "3..4"]]
+                   "...$"
+                   "3..4"]]
     (is
      (=
       {:number
@@ -15,7 +15,7 @@
          :line 0
          :start 0
          :end 2}
-         {:type :number, :group "3", :line 2, :start 0, :end 1}
+        {:type :number, :group "3", :line 2, :start 0, :end 1}
         {:group "4"
          :type :number
          :line 2
@@ -23,11 +23,11 @@
          :end 4}]
        :symbol
        [{:group "$"
-          :type :symbol
-          :line 1
-          :start 3
-          :end 4}]}
-        (parse-schematic schematic)))))
+         :type :symbol
+         :line 1
+         :start 3
+         :end 4}]}
+      (parse-schematic schematic)))))
 
 (deftest test-sum-of-part-numbers
   (is
@@ -63,4 +63,4 @@
     16345
     (gear-ratio
      [{:group "467"}
-       {:group "35"}]))))
+      {:group "35"}]))))
