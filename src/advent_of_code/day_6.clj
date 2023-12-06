@@ -81,6 +81,5 @@
                (re-seq #"\d+" (s/replace i #"\s" "")))]
     (count
      (filter
-      (fn [h]
-        (< d (* h (- t h))))
+      #(< d (* % (- t %)))
       (range 1 t)))))
