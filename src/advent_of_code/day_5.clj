@@ -7,29 +7,32 @@
 (defn line-numbers [line]
   (map read-string (re-seq #"\d+" line)))
 
+(defn seed-numbers->ranges [seed-numbers]
+  (map
+   (fn [[start size]]
+     [start (+ start size)])
+   (partition-all 2 seed-numbers)))
+
+(defn mapping->range [[dest src size]]
+  [src (+ src size) (- dest src)])
+
+(defn mapping-section->ranges [mapping-section]
+  (->> mapping-section
+       s/split-lines
+       (drop 1)
+       (map line-numbers)
+       (map mapping->range)
+       (sort-by first)))
+
 (defn parse-input [input]
-  (let [[seeds & maps] (s/split input #"\n\n")]
-    [(line-numbers seeds)
+  (let [[seeds & map-sections] (s/split input #"\n\n")]
+    [(seed-numbers->ranges (line-numbers seeds))
      (map
-      (fn [m]
-        (->> m
-             s/split-lines
-             (drop 1)
-             (map line-numbers)
-             (sort-by first)))
-      maps)]))
+      mapping-section->ranges
+      map-sections)]))
 
-(defn dest->src [value mappings]
-  (or
-   (some
-    (fn [[dest src size]]
-      (let [diff (- value dest)]
-        (when (<= 0 diff (dec size))
-          (+ src diff))))
-    mappings)
-   value))
-
-(defn fill-ranges [ranges]
+(defn fill-in-range-gaps
+  [ranges]
   (into
    [[0 (ffirst ranges) 0]]
    (mapcat (fn [[[s1 e1 :as r1] 
@@ -56,28 +59,6 @@
 (defn offset-range [[s e] v]
   [(+ s v) (+ e v) v])
 
-(defn mapping->range [[dest src size]]
-  [src (+ src size) (- dest src)])
-
-(defn sort-by-first [s]
-  (sort-by first s))
-
-(defn convert-mappings-to-ranges [mappings]
-  (map
-   (fn [m]
-     (sort-by-first
-      (map
-       mapping->range
-       m)))
-   mappings))
-
-(defn seed-numbers->ranges [seed-numbers]
-  (sort-by-first
-   (map
-    (fn [[start size]]
-      [start (+ start size)])
-    (partition-all 2 seed-numbers))))
-
 (defn offset-ranges [ranges]
   (map
    (fn [range]
@@ -90,18 +71,16 @@
 ;; Starting with the seed ranges, intersects those with
 ;; the next set of ranges. It then offsets the resulting
 ;; ranges and recurses. When the final range is arrived
-;; at, it just returns the min of range mins.
+;; at, it just returns the min of range starts.
 (defn min-location [input]
-  (let [[seed-numbers mappings] (parse-input input)
-        seed-ranges (seed-numbers->ranges seed-numbers)
-        map-ranges (convert-mappings-to-ranges mappings)]
-    (loop [src-range seed-ranges
-           [map-range & rest-map-ranges] map-ranges]
-      (if map-range
-        (let [filled-ranges (fill-ranges map-range)
-              intersected-ranges (intersect-ranges src-range
-                                                   filled-ranges)]
-          (recur
-           (offset-ranges intersected-ranges)
-           rest-map-ranges))
-        (ranges-min-start src-range)))))
+  (let [[seed-ranges mapping-ranges] (parse-input input)]
+    (loop [src-ranges seed-ranges
+           [dest-ranges & rest-dest-ranges] mapping-ranges]
+      (if dest-ranges
+        (recur
+         (->> dest-ranges
+              fill-in-range-gaps
+              (intersect-ranges src-ranges)
+              offset-ranges)
+         rest-dest-ranges)
+        (ranges-min-start src-ranges)))))
