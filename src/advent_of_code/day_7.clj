@@ -1,6 +1,5 @@
 (ns advent-of-code.day-7
-  (:require [clojure.java.io :as io]
-            [clojure.string :as s]))
+  (:require [clojure.string :as s]))
 
 ;; PART 1
 (defn pt1 [i]
