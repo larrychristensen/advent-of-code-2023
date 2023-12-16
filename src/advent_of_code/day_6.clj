@@ -77,7 +77,7 @@
 ;; Code golf version
 (defn g [i]
   (let [[t d] (map
-               #(Long/parseLong %)
+               read-string
                (re-seq #"\d+" (s/replace i #"\s" "")))]
     (count
      (filter
